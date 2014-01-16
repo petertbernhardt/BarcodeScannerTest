@@ -16,21 +16,27 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="29dp"
         android:text="@string/scan" />
-    
+
     <TextView
-	    android:id="@+id/scan_format"
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:textIsSelectable="true"
-	    android:layout_centerHorizontal="true"
-	    android:layout_below="@id/scan_button" />
-    
-	<TextView
-	    android:id="@+id/scan_content"
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:textIsSelectable="true"
-	    android:layout_centerHorizontal="true"
-	    android:layout_below="@id/scan_format" />
+        android:id="@+id/scan_format"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="56dp"
+        android:text="@string/format"
+        android:textIsSelectable="true" />
+
+    <TextView
+        android:id="@+id/scan_content"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:gravity="center" 
+        android:layout_below="@+id/scan_format"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="48dp"
+        android:text="@string/content"
+        android:textIsSelectable="true" />
 
 </RelativeLayout>

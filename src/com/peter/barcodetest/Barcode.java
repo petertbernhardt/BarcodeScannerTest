@@ -50,6 +50,8 @@ public class Barcode extends Activity implements OnClickListener{
 		IntentResult scanningResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
 		if (scanningResult != null) {
 			//we have a result
+			Toast toast = Toast.makeText(getApplicationContext(), "Barcode found!", Toast.LENGTH_SHORT);
+			toast.show();
 			String scanResult = scanningResult.getContents();
 			String scanFormat = scanningResult.getFormatName();
 			formatTxt.setText("FORMAT: " + scanFormat);
