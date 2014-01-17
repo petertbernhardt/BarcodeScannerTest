@@ -1,8 +1,22 @@
 package com.peter.barcodetest;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONException;
+import org.json.JSONObject;
+
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import android.os.Bundle;
@@ -59,28 +73,57 @@ public class Barcode extends Activity implements OnClickListener {
 			String scanFormat = scanningResult.getFormatName();
 			formatTxt.setText("FORMAT: " + scanFormat);
 			contentTxt.setText("CONTENT: " + scanResult);
-			try {
-				String result = String.valueOf(resultCode);
-				getUPCCode(result);
-			} catch (ClientProtocolException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			getUPCCode(scanResult);
 		} else {
-			Toast toast = Toast.makeText(getApplicationContext(), "No scan data received!", Toast.LENGTH_SHORT);
+			Toast toast = Toast.makeText(getApplicationContext(), "No scan data received!", Toast.LENGTH_LONG);
 			toast.show();
 		}
 	}
 	
-	private void getUPCCode(String resultCode) throws ClientProtocolException, IOException, JSONException {
+	private void getUPCCode(String resultCode) {
 		String apiURL = "http://www.upcdatabase.org/api/json/" + apiKey + "/" + resultCode;
-		// TODO:
-		// GET JSON DATA
+		JSONObject json = getJson(apiURL);
 		// PUT IT INTO THE UPC TEXT VIEW
+		// Get this to work
+		/*String itemName = json.getString("itemname");
+		upcTxt.setText("Item name: " + itemName);*/
+	}
+
+	public JSONObject getJson(String url){
+		InputStream is = null;
+		String result = "";
+		JSONObject jsonObject = null;
+		// HTTP
+		try {	
+			HttpClient httpclient = new DefaultHttpClient(); // for port 80 requests!
+			HttpPost httppost = new HttpPost(url);
+			HttpResponse response = httpclient.execute(httppost);
+			HttpEntity entity = response.getEntity();
+			is = entity.getContent();
+		} catch(Exception e) {
+			return null;
+		}
+		// Read response to string
+		try {	
+			BufferedReader reader = new BufferedReader(new InputStreamReader(is,"utf-8"),8);
+			StringBuilder sb = new StringBuilder();
+			String line = null;
+			while ((line = reader.readLine()) != null) {
+				sb.append(line + "\n");
+			}
+			is.close();
+			result = sb.toString();	
+		} catch(Exception e) {
+			return null;
+		}
+		 
+		// Convert string to object
+		try {
+			jsonObject = new JSONObject(result);
+		} catch(JSONException e) {
+			return null;
+		}
+		return jsonObject;
 	}
 
 }
