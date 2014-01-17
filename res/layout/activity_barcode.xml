@@ -39,4 +39,13 @@
         android:text="@string/content"
         android:textIsSelectable="true" />
 
+    <TextView
+        android:id="@+id/upc"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:text="@string/upc" />
+
 </RelativeLayout>

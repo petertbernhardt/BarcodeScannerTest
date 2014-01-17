@@ -1,5 +1,8 @@
 package com.peter.barcodetest;
 
+import java.io.IOException;
+import org.apache.http.client.ClientProtocolException;
+import org.json.JSONException;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import android.os.Bundle;
@@ -14,10 +17,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 @SuppressLint("NewApi")
-public class Barcode extends Activity implements OnClickListener{
+public class Barcode extends Activity implements OnClickListener {
 	
 	private Button scanBtn;
-	private TextView formatTxt, contentTxt;
+	private TextView formatTxt, contentTxt, upcTxt;
+	private String apiKey = "d9c6149a623b7b5cf8c32152f1f78076";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +30,7 @@ public class Barcode extends Activity implements OnClickListener{
 		scanBtn = (Button)findViewById(R.id.scan_button);
 		formatTxt = (TextView)findViewById(R.id.scan_format);
 		contentTxt = (TextView)findViewById(R.id.scan_content);
+		upcTxt = (TextView)findViewById(R.id.upc);
 		scanBtn.setOnClickListener(this);
 	}
 
@@ -50,16 +55,32 @@ public class Barcode extends Activity implements OnClickListener{
 		IntentResult scanningResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
 		if (scanningResult != null) {
 			//we have a result
-			Toast toast = Toast.makeText(getApplicationContext(), "Barcode found!", Toast.LENGTH_SHORT);
-			toast.show();
 			String scanResult = scanningResult.getContents();
 			String scanFormat = scanningResult.getFormatName();
 			formatTxt.setText("FORMAT: " + scanFormat);
 			contentTxt.setText("CONTENT: " + scanResult);
+			try {
+				String result = String.valueOf(resultCode);
+				getUPCCode(result);
+			} catch (ClientProtocolException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		} else {
 			Toast toast = Toast.makeText(getApplicationContext(), "No scan data received!", Toast.LENGTH_SHORT);
 			toast.show();
 		}
 	}
 	
+	private void getUPCCode(String resultCode) throws ClientProtocolException, IOException, JSONException {
+		String apiURL = "http://www.upcdatabase.org/api/json/" + apiKey + "/" + resultCode;
+		// TODO:
+		// GET JSON DATA
+		// PUT IT INTO THE UPC TEXT VIEW
+	}
+
 }
